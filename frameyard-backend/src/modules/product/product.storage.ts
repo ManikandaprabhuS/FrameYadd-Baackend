@@ -29,7 +29,6 @@ console.log("UPLOAD RESULT ERROR:",error);
 console.log("AFTER UPLOAD EXECUTED");
 
    if (error) {
-
   console.error(
     "SUPABASE STORAGE ERROR:",
     JSON.stringify(error, null, 2)

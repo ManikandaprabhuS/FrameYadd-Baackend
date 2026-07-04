@@ -11,6 +11,10 @@ console.log(
   "SERVICE KEY EXISTS:",
   !!process.env.SUPABASE_SERVICE_ROLE_KEY
 );
+console.log(
+  "SERVICE ROLE KEY PREFIX:",
+  process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 50)
+);
 
 export const supabase = createClient(
   supabaseUrl,
