@@ -8,6 +8,15 @@ export const uploadProductImage =
     const extension =file.originalname.split(".").pop();
     const fileName =`${crypto.randomUUID()}.${extension}`;
     const filePath =`products/${fileName}`;
+     console.log(
+      "Uploading to bucket: product-images"
+    );
+
+    console.log(
+      "File Path:",
+      filePath
+    );
+    
     const { error } =
       await supabase.storage
         .from("product-images")
@@ -18,11 +27,14 @@ export const uploadProductImage =
           }
         );
 
-    if (error) {
-      throw new Error(
-        error.message
-      );
-    }
+   if (error) {
+
+  console.error(
+    "SUPABASE STORAGE ERROR:",
+    JSON.stringify(error, null, 2)
+  );
+  throw new Error(error.message);
+}
     const {
       data,
     } = supabase.storage
