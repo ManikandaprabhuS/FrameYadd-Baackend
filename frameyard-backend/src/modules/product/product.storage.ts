@@ -16,16 +16,17 @@ export const uploadProductImage =
       "File Path:",
       filePath
     );
-    
+
     const { error } =
       await supabase.storage
         .from("product-images")
-        .upload(
-          filePath,
-          file.buffer,
+        .upload(filePath,file.buffer,
           {contentType: file.mimetype,
           }
         );
+
+console.log("UPLOAD RESULT ERROR:",error);
+console.log("AFTER UPLOAD EXECUTED");
 
    if (error) {
 
