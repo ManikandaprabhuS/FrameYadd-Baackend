@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../config/prisma";
+import { supabase } from "../../config/supabase";
 
 type ProductImageInput = {
   imageUrl: string;
@@ -323,11 +324,13 @@ export const deleteVariant = async (
 export const deleteProduct = async (
   productId: string
 ) => {
-
   const existingProduct =
     await prisma.product.findUnique({
       where: {
         id: productId,
+      },
+      include: {
+        images: true,
       },
     });
 
@@ -336,6 +339,47 @@ export const deleteProduct = async (
       success: false,
       message: "Product not found",
     };
+  }
+
+  const paths =
+    existingProduct.images
+      .map((image) => {
+
+        const marker =
+          "/product-images/";
+
+        const index =
+          image.imageUrl.indexOf(
+            marker
+          );
+
+        if (index === -1) {
+          return null;
+        }
+
+        return image.imageUrl.substring(
+          index + marker.length
+        );
+
+      })
+      .filter(Boolean) as string[];
+
+  console.log(
+    "FILES TO DELETE:",
+    paths
+  );
+
+  if (paths.length > 0) {
+    const { error } =
+      await supabase.storage
+        .from("product-images")
+        .remove(paths);
+
+    console.log(
+      "DELETE STORAGE ERROR:",
+      error
+    );
+
   }
 
   await prisma.product.delete({
