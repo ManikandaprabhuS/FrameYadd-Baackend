@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { addProduct, addVariant, editProduct, editVariant, fetchProductById, 
-    fetchProducts, removeVariant, exportInventory,
-    uploadImages} from "./product.controller";
+    fetchProducts, removeVariant, exportInventory,uploadImages,deleteProduct} from "./product.controller";
 import { authenticateUser } from "../../middlewares/auth.middleware";
 import { authorizeAdmin } from "../../middlewares/admin.middleware";
 import { upload } from "../../middlewares/upload.middleware";
@@ -17,5 +16,6 @@ router.get("/:id", fetchProductById);
 router.put("/:id", authenticateUser, authorizeAdmin, editProduct);
 router.put("/variants/:variantId", authenticateUser, authorizeAdmin, editVariant);
 router.delete("/variants/:variantId", authenticateUser, authorizeAdmin, removeVariant);
+router.delete("/:id",authenticateUser,authorizeAdmin,deleteProduct);
 
 export default router;

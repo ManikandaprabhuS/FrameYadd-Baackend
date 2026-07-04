@@ -294,7 +294,6 @@ export const updateVariant = async (
 export const deleteVariant = async (
   variantId: string
 ) => {
-
   const existingVariant =
     await prisma.productVariant.findUnique({
       where: {
@@ -318,6 +317,36 @@ export const deleteVariant = async (
   return {
     success: true,
     message: "Variant deleted successfully",
+  };
+};
+
+export const deleteProduct = async (
+  productId: string
+) => {
+
+  const existingProduct =
+    await prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+    });
+
+  if (!existingProduct) {
+    return {
+      success: false,
+      message: "Product not found",
+    };
+  }
+
+  await prisma.product.delete({
+    where: {
+      id: productId,
+    },
+  });
+
+  return {
+    success: true,
+    message: "Product deleted successfully",
   };
 };
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Parser } from "json2csv";
-import { createProduct, createVariant, deleteVariant, 
+import { createProduct, createVariant, deleteVariant,deleteProduct as deleteProductService,
   getAllProducts, getProductById, updateProduct, updateVariant, getInventoryForExport } from "./product.service";
 
 interface ProductParams {
@@ -38,6 +38,22 @@ export const fetchProductById = async (
   const result =
     await getProductById(req.params.id);
 
+  return res.status(200).json(result);
+};
+
+export const deleteProduct = async (
+  req: Request,
+  res: Response
+) => {
+  const productId =String(req.params.id);
+
+const result = await deleteProductService(
+    productId
+  );
+
+  if (!result.success) {
+    return res.status(404).json(result);
+  }
   return res.status(200).json(result);
 };
 
