@@ -1,11 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../config/prisma";
+import { User } from "@supabase/supabase-js";
+
+export interface AuthRequest
+  extends Request {
+  user?: User;
+}
 
 export const authorizeAdmin = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
+   console.log("REQ USER =",req.user?.email);
 
   const userId = (req as any).user?.id;
 
@@ -21,6 +28,9 @@ export const authorizeAdmin = async (
       id: userId,
     },
   });
+  console.log(
+  "DB USER ROLE =", user?.role
+);
 
   if (!user) {
     return res.status(404).json({

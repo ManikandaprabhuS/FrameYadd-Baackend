@@ -8,8 +8,7 @@ import { upload } from "../../middlewares/upload.middleware";
 
 const router = Router();
 
-router.post(
-  "/uploadProductImages", authenticateUser, authorizeAdmin,upload.array("images", 10), uploadImages);
+router.post("/uploadProductImages", authenticateUser, authorizeAdmin,upload.array("images", 10), uploadImages);
 router.post("/addProduct", authenticateUser, authorizeAdmin, addProduct);
 router.post("/:productId/variants", authenticateUser, authorizeAdmin, addVariant);
 router.get("/", fetchProducts);
