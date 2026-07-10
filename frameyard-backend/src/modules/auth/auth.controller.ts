@@ -28,11 +28,12 @@ export const adminLogin = async (
     result.session.access_token,
     {
       httpOnly: true,
-      secure: false,
-      // secure:
-      //   process.env.NODE_ENV ===
-      //   "production",
-        sameSite: "lax",
+      //secure: false,
+      secure:
+        process.env.NODE_ENV ===
+        "production",
+      // sameSite: "lax",
+      sameSite: "none",
       maxAge:
         7 * 24 * 60 * 60 * 1000,
     }
