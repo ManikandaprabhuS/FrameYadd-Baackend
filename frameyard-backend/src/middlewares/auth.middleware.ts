@@ -27,9 +27,7 @@ if (!token) {
   } = await supabase.auth.getUser(token);
 
   console.log("SUPABASE USER =",user?.email);
-
    console.log("SUPABASE ERROR =",error);
-
   if (error || !user) {
     return res.status(401).json({
       success: false,
