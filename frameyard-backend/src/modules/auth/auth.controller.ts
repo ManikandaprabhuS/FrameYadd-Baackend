@@ -34,7 +34,7 @@ res.cookie("fy_access_token", result.session.access_token, {
   sameSite: isProduction ? "none" : "lax",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 });
-
+console.log("NODE_ENV =", process.env.NODE_ENV);
   // res.cookie(
   //   "fy_access_token",result.session.access_token,
   //   {
@@ -48,10 +48,14 @@ res.cookie("fy_access_token", result.session.access_token, {
   //       7 * 24 * 60 * 60 * 1000,
   //   }
   // );
-  console.log("COOKIE OPTIONS");
-  console.log({
+
+console.log("SET COOKIE =", {
   secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  sameSite:
+    process.env.NODE_ENV === "production"
+      ? "none"
+      : "lax",
+  origin: req.headers.origin,
 });
 
   return res.status(200).json({
