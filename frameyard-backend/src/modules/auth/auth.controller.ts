@@ -27,20 +27,32 @@ console.log("Email:", req.body.email);
   ) {
     return res.status(401).json(result);
   }
+const isProduction = process.env.NODE_ENV === "production";
+res.cookie("fy_access_token", result.session.access_token, {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
 
-  res.cookie(
-    "fy_access_token",result.session.access_token,
-    {
-      httpOnly: true,
-      //secure: false,
-      secure:
-        process.env.NODE_ENV ==="production",
-       sameSite: "lax",
-      //sameSite: "none",
-      maxAge:
-        7 * 24 * 60 * 60 * 1000,
-    }
-  );
+  // res.cookie(
+  //   "fy_access_token",result.session.access_token,
+  //   {
+  //     httpOnly: true,
+  //     //secure: false,
+  //     secure:
+  //       process.env.NODE_ENV ==="production",
+  //      sameSite: "lax",
+  //     //sameSite: "none",
+  //     maxAge:
+  //       7 * 24 * 60 * 60 * 1000,
+  //   }
+  // );
+  console.log("COOKIE OPTIONS");
+  console.log({
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+});
 
   return res.status(200).json({
     success: true,

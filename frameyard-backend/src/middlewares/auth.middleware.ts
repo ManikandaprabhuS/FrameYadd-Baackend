@@ -26,18 +26,20 @@ if (!token) {
     error,
   } = await supabase.auth.getUser(token);
 
-  console.log("SUPABASE USER =",user?.email);
-   console.log("SUPABASE ERROR =",error);
   if (error || !user) {
     return res.status(401).json({
       success: false,
       message: "Invalid token",
     });
   }
+  console.log("COOKIE TOKEN =", !!token);
+console.log("COOKIE HEADER =", req.headers.cookie);
+console.log("SUPABASE USER =", user?.email);
+console.log("SUPABASE ERROR =", error);
+console.log("COOKIES =", req.cookies);
+console.log("AUTH =", req.headers.authorization);
   req.user = user;
   next();
-console.log("COOKIES =", req.cookies);
-console.log("AUTH =", req.headers.authorization)
 
 };
 
