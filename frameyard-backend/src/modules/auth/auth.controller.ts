@@ -16,6 +16,11 @@ export const adminLogin = async (
 ) => {
 
   const result =await adminLoginUser(req.body);
+  console.log("===== LOGIN REQUEST =====");
+console.log("Origin:", req.headers.origin);
+console.log("User-Agent:", req.headers["user-agent"]);
+console.log("Email:", req.body.email);
+
   if (
     !result.success ||
     !result.session?.access_token
@@ -24,16 +29,14 @@ export const adminLogin = async (
   }
 
   res.cookie(
-    "fy_access_token",
-    result.session.access_token,
+    "fy_access_token",result.session.access_token,
     {
       httpOnly: true,
       //secure: false,
       secure:
-        process.env.NODE_ENV ===
-        "production",
-      // sameSite: "lax",
-      sameSite: "none",
+        process.env.NODE_ENV ==="production",
+       sameSite: "lax",
+      //sameSite: "none",
       maxAge:
         7 * 24 * 60 * 60 * 1000,
     }
