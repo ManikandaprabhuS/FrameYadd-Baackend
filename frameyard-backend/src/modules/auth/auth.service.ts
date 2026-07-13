@@ -270,13 +270,11 @@ export const adminLoginUser = async (data: any) => {
     };
   }
 
-  if (user.role !== "ADMIN") {
-    if (user.role !== "EMPLOYEE") {
+  if (!["ADMIN", "EMPLOYEE"].includes(user.role)) {
     return {
       success: false,
       message: "Access denied. Admin account required.",
     };
-    }
   }
 
   if (!user.isActive) {

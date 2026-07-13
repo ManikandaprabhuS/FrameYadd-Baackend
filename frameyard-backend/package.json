@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
   "dev": "ts-node-dev --respawn src/server.ts",
-  "build": "tsc",
+  "build": "prisma generate && tsc",
+  "render-build": "prisma generate && prisma migrate deploy && tsc",
   "start": "node dist/server.js"
 },
   "keywords": [],

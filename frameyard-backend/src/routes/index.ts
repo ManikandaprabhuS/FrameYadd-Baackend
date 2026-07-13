@@ -20,5 +20,6 @@ router.use("/customers", customerRoutes);
 router.use("/upload", uploadRoutes);
 router.use("/notifications", notificationRoutes);
 router.use("/employees", employeeRoutes);
+router.use("/admin/employees", employeeRoutes);
 
 export default router;
