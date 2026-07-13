@@ -4,6 +4,7 @@ const allowedImageTypes = new Set([
   "image/jpeg",
   "image/png",
   "image/webp",
+  "video/mp4",
 ]);
 
 export const upload =
@@ -15,7 +16,7 @@ export const upload =
     },
     fileFilter: (_req, file, cb) => {
       if (!allowedImageTypes.has(file.mimetype)) {
-        cb(new Error("Only JPG, PNG, and WebP images are allowed"));
+        cb(new Error("Only JPG, PNG, WebP, and MP4 files are allowed"));
         return;
       }
 

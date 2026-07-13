@@ -21,7 +21,8 @@ app.use(
     console.error(err);
     const isUploadError =
       err instanceof multer.MulterError ||
-      err?.message?.includes("Only JPG");
+      err?.message?.includes("Only JPG") ||
+      err?.message?.includes("Supabase Storage rejected");
 
     return res.status(isUploadError ? 400 : 500).json({success: false,
       message: isUploadError ? err.message : "Internal server error",

@@ -1,11 +1,21 @@
 import { supabase } from "../../config/supabase";
 import crypto from "crypto";
 
+const extensionByMimeType: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "video/mp4": "mp4",
+};
+
 export const uploadProductImage =
   async (
     file: Express.Multer.File
   ) => {
-    const extension =file.originalname.split(".").pop();
+    const extension =
+      extensionByMimeType[file.mimetype] ||
+      file.originalname.split(".").pop() ||
+      "bin";
     const fileName =`${crypto.randomUUID()}.${extension}`;
     const filePath =`products/${fileName}`;
      console.log(
@@ -33,6 +43,11 @@ console.log("AFTER UPLOAD EXECUTED");
     "SUPABASE STORAGE ERROR:",
     JSON.stringify(error, null, 2)
   );
+  if (error.message.toLowerCase().includes("row-level security")) {
+    throw new Error(
+      "Supabase Storage rejected the upload with RLS. Set SUPABASE_SERVICE_ROLE_KEY on Render to the service_role key, not the anon key."
+    );
+  }
   throw new Error(error.message);
 }
     const {

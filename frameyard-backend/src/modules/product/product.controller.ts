@@ -173,7 +173,9 @@ console.log("REQ FILES =", req.files);
     return res.json({success: true, images: imageUrls,});
   } catch (error: any) {
     const isUploadError = error instanceof multer.MulterError;
-    const isValidationError = error?.message?.includes("Only JPG");
+    const isValidationError =
+      error?.message?.includes("Only JPG") ||
+      error?.message?.includes("Supabase Storage rejected");
 
     return res.status(isUploadError || isValidationError ? 400 : 500).json({
       success: false,
