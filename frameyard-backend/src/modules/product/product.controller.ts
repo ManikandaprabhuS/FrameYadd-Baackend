@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import multer from "multer";
 import { Parser } from "json2csv";
 import { createProduct, createVariant, deleteVariant,deleteProduct as deleteProductService,
   getAllProducts, getProductById, updateProduct, updateVariant, getInventoryForExport } from "./product.service";
@@ -171,7 +172,13 @@ console.log("REQ FILES =", req.files);
     const imageUrls =await uploadProductImages(files);
     return res.json({success: true, images: imageUrls,});
   } catch (error: any) {
-    return res.status(500).json({ success: false, message: error.message,});
+    const isUploadError = error instanceof multer.MulterError;
+    const isValidationError = error?.message?.includes("Only JPG");
+
+    return res.status(isUploadError || isValidationError ? 400 : 500).json({
+      success: false,
+      message: error.message || "Failed to upload images",
+    });
   }
 };
 export { uploadProductImages };

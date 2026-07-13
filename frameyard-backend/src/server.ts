@@ -2,6 +2,7 @@ import cors from "cors";
 import "dotenv/config";
 import app from "./app";
 import cookieParser from "cookie-parser";
+import multer from "multer";
 
 const PORT = 5000;
 
@@ -18,8 +19,12 @@ app.use(
     next: any
   ) => {
     console.error(err);
-    return res.status(500).json({success: false,
-      message: "Internal server error",
+    const isUploadError =
+      err instanceof multer.MulterError ||
+      err?.message?.includes("Only JPG");
+
+    return res.status(isUploadError ? 400 : 500).json({success: false,
+      message: isUploadError ? err.message : "Internal server error",
     });
   }
 );
