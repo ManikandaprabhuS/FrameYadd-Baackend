@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import { User } from "@supabase/supabase-js";
 import { supabaseAuth } from "../config/supabase";
+import prisma from "../config/prisma";
 
 export interface AuthRequest extends Request {
   user?: User;
 }
 
-  export const authenticateUser = async (
+export const authenticateUser = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction
@@ -16,7 +17,6 @@ export interface AuthRequest extends Request {
     ? authHeader.slice("Bearer ".length)
     : undefined;
   const token = bearerToken || req.cookies?.fy_access_token;
-   console.log("COOKIE TOKEN =", !!token);
 
 if (!token) {
   return res.status(401)
@@ -36,12 +36,19 @@ if (!token) {
       message: "Invalid token",
     });
   }
-  console.log("COOKIE TOKEN =", !!token);
-console.log("COOKIE HEADER =", req.headers.cookie);
-console.log("SUPABASE USER =", user?.email);
-console.log("SUPABASE ERROR =", error);
-console.log("COOKIES =", req.cookies);
-console.log("AUTH =", req.headers.authorization);
+
+  const appUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { isActive: true },
+  });
+
+  if (!appUser || !appUser.isActive) {
+    return res.status(403).json({
+      success: false,
+      message: "Account is inactive",
+    });
+  }
+
   req.user = user;
   next();
 
