@@ -31,7 +31,7 @@ const isProduction = process.env.NODE_ENV === "production";
 res.cookie("fy_access_token", result.session.access_token, {
   httpOnly: true,
   secure: isProduction,
-  sameSite: "none"
+  sameSite: isProduction ? "none" : "lax",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 });
 console.log("NODE_ENV =", process.env.NODE_ENV);
