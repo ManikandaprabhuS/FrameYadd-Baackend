@@ -1,5 +1,16 @@
-import { supabaseAuth } from "../../config/supabase";
+import { supabaseAdmin, supabaseAuth } from "../../config/supabase";
 import prisma from "../../config/prisma";
+
+const isPlaceholderEmployeePhone = (phoneNumber?: string | null) =>
+  typeof phoneNumber === "string" && phoneNumber.startsWith("EMP-");
+
+const sanitizeProfileUser = <T extends { phoneNumber: string | null; role: string }>(user: T) => ({
+  ...user,
+  phoneNumber:
+    user.role === "EMPLOYEE" && isPlaceholderEmployeePhone(user.phoneNumber)
+      ? ""
+      : user.phoneNumber,
+});
 
 export const registerUser = async (data: any) => {
   const { name, email, phoneNumber, password } = data;
@@ -144,7 +155,7 @@ export const getProfile = async (
 
   return {
     success: true,
-    user,
+    user: sanitizeProfileUser(user),
   };
 };
 
@@ -152,26 +163,81 @@ export const updateProfile = async (
   userId: string,
   data: any
 ) => {
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      role: true,
+      phoneNumber: true,
+    },
+  });
+
+  if (!existingUser) {
+    return {
+      success: false,
+      message: "User not found",
+    };
+  }
+
+  const nextPhoneNumber =
+    typeof data.phoneNumber === "string" && data.phoneNumber.trim()
+      ? data.phoneNumber.trim()
+      : existingUser.phoneNumber;
+
   const updatedUser = await prisma.user.update({
     where: {
       id: userId,
     },
     data: {
-      name: data.name,
-      phoneNumber: data.phoneNumber,
-      addressLine: data.addressLine,
-      postalCode: data.postalCode,
-      cityName: data.cityName,
-      stateName: data.stateName,
-      countryName: data.countryName,
-      gender: data.gender,
+      name: data.name?.trim(),
+      phoneNumber: nextPhoneNumber,
+      addressLine: data.addressLine || null,
+      postalCode: data.postalCode || null,
+      cityName: data.cityName || null,
+      stateName: data.stateName || null,
+      countryName: data.countryName || null,
+      gender: data.gender || null,
     },
   });
 
   return {
     success: true,
     message: "Profile updated successfully",
-    user: updatedUser,
+    user: sanitizeProfileUser(updatedUser),
+  };
+};
+
+export const changePassword = async (
+  userId: string,
+  password: string
+) => {
+  if (!password || password.length < 8) {
+    return {
+      success: false,
+      message: "Password must be at least 8 characters",
+    };
+  }
+
+  const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+    password,
+  });
+
+  if (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+
+  console.log("[Profile] Password Updated", {
+    userId,
+    timestamp: new Date().toISOString(),
+  });
+
+  return {
+    success: true,
+    message: "Password updated successfully",
   };
 };
 
@@ -205,11 +271,25 @@ export const adminLoginUser = async (data: any) => {
   }
 
   if (user.role !== "ADMIN") {
+    if (user.role !== "EMPLOYEE") {
     return {
       success: false,
       message: "Access denied. Admin account required.",
     };
+    }
   }
+
+  if (!user.isActive) {
+    return {
+      success: false,
+      message: "Account is inactive. Please contact an administrator.",
+    };
+  }
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { lastLogin: new Date() },
+  });
 
   return {
     success: true,

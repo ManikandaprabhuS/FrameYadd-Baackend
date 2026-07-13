@@ -25,6 +25,11 @@ model User {
   orders          Order[]
   role            UserRole  @default(CUSTOMER)
   isActive        Boolean   @default(true)
+  employeeId      String?   @unique
+  designation     String?
+  department      String?
+  createdBy       String?
+  lastLogin       DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
@@ -34,6 +39,7 @@ model User {
 enum UserRole {
   CUSTOMER
   ADMIN
+  EMPLOYEE
 }
 
 enum Gender {

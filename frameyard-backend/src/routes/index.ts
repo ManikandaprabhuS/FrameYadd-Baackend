@@ -7,6 +7,7 @@ import orderRoutes from "../modules/order/order.routes";
 import customerRoutes from "../modules/customer/customer.routes";
 import uploadRoutes from "../modules/upload/upload.routes";
 import notificationRoutes from "../modules/notification/notification.routes";
+import employeeRoutes from "../modules/employee/employee.routes";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use("/orders", orderRoutes);
 router.use("/customers", customerRoutes);
 router.use("/upload", uploadRoutes);
 router.use("/notifications", notificationRoutes);
+router.use("/employees", employeeRoutes);
 
 export default router;

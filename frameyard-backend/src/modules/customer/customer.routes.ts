@@ -7,12 +7,12 @@ import {
   lookupCustomerByPhoneNumber,
 } from "./customer.controller";
 import { authenticateUser } from "../../middlewares/auth.middleware";
-import { authorizeAdmin } from "../../middlewares/admin.middleware";
+import { authorizeRoles } from "../../middlewares/role.middleware";
 
 const router = Router();
 
-router.get("/", authenticateUser, authorizeAdmin, getCustomers);
-router.get("/lookup", authenticateUser, authorizeAdmin, lookupCustomerByPhoneNumber);
-router.get("/:id", authenticateUser, authorizeAdmin, getCustomerDetails);
+router.get("/", authenticateUser, authorizeRoles("ADMIN", "EMPLOYEE"), getCustomers);
+router.get("/lookup", authenticateUser, authorizeRoles("ADMIN", "EMPLOYEE"), lookupCustomerByPhoneNumber);
+router.get("/:id", authenticateUser, authorizeRoles("ADMIN", "EMPLOYEE"), getCustomerDetails);
 
 export default router;
