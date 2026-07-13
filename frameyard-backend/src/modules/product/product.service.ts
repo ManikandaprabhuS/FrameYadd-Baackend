@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../config/prisma";
-import { supabase } from "../../config/supabase";
+import { supabaseAdmin } from "../../config/supabase";
 
 type ProductImageInput = {
   imageUrl: string;
@@ -371,7 +371,7 @@ export const deleteProduct = async (
 
   if (paths.length > 0) {
     const { error } =
-      await supabase.storage
+      await supabaseAdmin.storage
         .from("product-images")
         .remove(paths);
 

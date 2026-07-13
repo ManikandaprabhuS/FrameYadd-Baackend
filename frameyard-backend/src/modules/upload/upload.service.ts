@@ -1,4 +1,4 @@
-import { supabase } from "../../config/supabase";
+import { supabaseAdmin } from "../../config/supabase";
 
 const BUCKET_NAME = "customer-photos";
 
@@ -9,7 +9,7 @@ export const uploadCustomerPhoto = async (
   const ext = file.originalname.split(".").pop();
   const fileName = `${userId}/${Date.now()}.${ext}`;
 
-  const { error } = await supabase.storage
+  const { error } = await supabaseAdmin.storage
     .from(BUCKET_NAME)
     .upload(fileName, file.buffer, {
       contentType: file.mimetype,
@@ -23,7 +23,7 @@ export const uploadCustomerPhoto = async (
     };
   }
 
-  const { data: publicData } = supabase.storage
+  const { data: publicData } = supabaseAdmin.storage
     .from(BUCKET_NAME)
     .getPublicUrl(fileName);
 

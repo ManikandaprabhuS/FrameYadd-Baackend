@@ -1,4 +1,4 @@
-import { supabase } from "../../config/supabase";
+import { supabaseAuth } from "../../config/supabase";
 import prisma from "../../config/prisma";
 
 export const registerUser = async (data: any) => {
@@ -18,7 +18,7 @@ if (existingUser) {
     message: "EmailId or PhoneNumber already exists, Please try some other EmailId and PhoneNumber"
   };
 }
-  const { data: authData, error } = await supabase.auth.signUp({
+  const { data: authData, error } = await supabaseAuth.auth.signUp({
       email,
       password,
     });
@@ -65,7 +65,7 @@ export const loginUser = async (data: any) => {
   const { email, password } = data;
 
   const { data: authData, error } =
-    await supabase.auth.signInWithPassword({
+    await supabaseAuth.auth.signInWithPassword({
       email,
       password,
     });
@@ -179,7 +179,7 @@ export const adminLoginUser = async (data: any) => {
   const { email, password } = data;
 
   const { data: authData, error } =
-    await supabase.auth.signInWithPassword({
+    await supabaseAuth.auth.signInWithPassword({
       email,
       password,
     });

@@ -1,4 +1,4 @@
-import { supabase } from "../../config/supabase";
+import { supabaseAdmin } from "../../config/supabase";
 import crypto from "crypto";
 
 const extensionByMimeType: Record<string, string> = {
@@ -28,7 +28,7 @@ export const uploadProductImage =
     );
 
     const { error } =
-      await supabase.storage
+      await supabaseAdmin.storage
         .from("product-images")
         .upload(filePath,file.buffer,
           {contentType: file.mimetype,
@@ -52,7 +52,7 @@ console.log("AFTER UPLOAD EXECUTED");
 }
     const {
       data,
-    } = supabase.storage
+    } = supabaseAdmin.storage
       .from("product-images")
       .getPublicUrl(
         filePath

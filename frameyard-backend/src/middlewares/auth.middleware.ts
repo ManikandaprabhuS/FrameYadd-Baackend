@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { User } from "@supabase/supabase-js";
-import { supabase } from "../config/supabase";
+import { supabaseAuth } from "../config/supabase";
 
 export interface AuthRequest extends Request {
   user?: User;
@@ -28,7 +28,7 @@ if (!token) {
   const {
     data: { user },
     error,
-  } = await supabase.auth.getUser(token);
+  } = await supabaseAuth.auth.getUser(token);
 
   if (error || !user) {
     return res.status(401).json({
