@@ -61,6 +61,7 @@ console.log("SET COOKIE =", {
   return res.status(200).json({
     success: true,
     user: result.user,
+    token: result.session.access_token,
     message: result.message,
   });
 };

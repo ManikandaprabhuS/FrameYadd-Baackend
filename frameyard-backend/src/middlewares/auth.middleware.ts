@@ -11,7 +11,11 @@ export interface AuthRequest extends Request {
   res: Response,
   next: NextFunction
 ) => {
-  const token =req.cookies?.fy_access_token;
+  const authHeader = req.headers.authorization;
+  const bearerToken = authHeader?.startsWith("Bearer ")
+    ? authHeader.slice("Bearer ".length)
+    : undefined;
+  const token = req.cookies?.fy_access_token || bearerToken;
    console.log("COOKIE TOKEN =", !!token);
 
 if (!token) {
