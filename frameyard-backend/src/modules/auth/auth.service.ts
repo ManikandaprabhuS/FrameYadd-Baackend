@@ -102,9 +102,6 @@ if (!user) {
 }
 
 const authUser = authData.user;
-console.log("AUTH USER:", authUser);
-console.log("EMAIL CONFIRMED:", authUser.email_confirmed_at);
-console.log("Before Update:", user.isEmailVerified);
 
 if (authUser.email_confirmed_at && !user.isEmailVerified) {
   const updatedUser = await prisma.user.update({
@@ -115,7 +112,6 @@ if (authUser.email_confirmed_at && !user.isEmailVerified) {
       isEmailVerified: true,
     },
   });
-  console.log("After Update:", updatedUser.isEmailVerified);
 
   try {
     await prisma.notification.create({
@@ -229,11 +225,6 @@ export const changePassword = async (
       message: error.message,
     };
   }
-
-  console.log("[Profile] Password Updated", {
-    userId,
-    timestamp: new Date().toISOString(),
-  });
 
   return {
     success: true,

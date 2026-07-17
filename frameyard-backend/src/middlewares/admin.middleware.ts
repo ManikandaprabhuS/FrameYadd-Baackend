@@ -12,8 +12,6 @@ export const authorizeAdmin = async (
   res: Response,
   next: NextFunction
 ) => {
-   console.log("REQ USER =",req.user?.email);
-
   const userId = (req as any).user?.id;
 
   if (!userId) {
@@ -28,9 +26,6 @@ export const authorizeAdmin = async (
       id: userId,
     },
   });
-  console.log(
-  "DB USER ROLE =", user?.role
-);
 
   if (!user) {
     return res.status(404).json({

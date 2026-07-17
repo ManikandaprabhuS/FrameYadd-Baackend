@@ -16,10 +16,6 @@ export const adminLogin = async (
 ) => {
 
   const result =await adminLoginUser(req.body);
-  console.log("===== LOGIN REQUEST =====");
-console.log("Origin:", req.headers.origin);
-console.log("User-Agent:", req.headers["user-agent"]);
-console.log("Email:", req.body.email);
 
   if (
     !result.success ||
@@ -33,29 +29,6 @@ res.cookie("fy_access_token", result.session.access_token, {
   secure: isProduction,
   sameSite: isProduction ? "none" : "lax",
   maxAge: 7 * 24 * 60 * 60 * 1000,
-});
-console.log("NODE_ENV =", process.env.NODE_ENV);
-  // res.cookie(
-  //   "fy_access_token",result.session.access_token,
-  //   {
-  //     httpOnly: true,
-  //     //secure: false,
-  //     secure:
-  //       process.env.NODE_ENV ==="production",
-  //      sameSite: "lax",
-  //     //sameSite: "none",
-  //     maxAge:
-  //       7 * 24 * 60 * 60 * 1000,
-  //   }
-  // );
-
-console.log("SET COOKIE =", {
-  secure: process.env.NODE_ENV === "production",
-  sameSite:
-    process.env.NODE_ENV === "production"
-      ? "none"
-      : "lax",
-  origin: req.headers.origin,
 });
 
   return res.status(200).json({
